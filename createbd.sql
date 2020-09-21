@@ -1,0 +1,6 @@
+
+
+CREATE DATABASE rod;
+
+CREATE DATABASE moodle;
+

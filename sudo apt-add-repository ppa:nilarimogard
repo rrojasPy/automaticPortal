@@ -1,0 +1,16 @@
+sudo apt-add-repository ppa:nilarimogard/webupd8
+sudo apt-get update
+sudo apt-get install grive
+
+
+google-drive-ocamlfuse -headless -label me -id 367116221053-7n0vf5akeru7on6o2fjinrecpdoe99eg.apps.googleusercontent.com -secret 1qsNodXNaWq1mQuBjUjmvhoO
+
+
+593362003662-uhhi1bkbsmbn4uba8n952879als6hqmc.apps.googleusercontent.com
+
+
+
+
+wget -O drive https://drive.google.com/uc?id=0B3X9GlR6Embnb095MGxEYmJhY2c
+sudo install drive /usr/local/bin/drive
+exi
