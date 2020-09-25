@@ -51,7 +51,7 @@ mkdir ~/$DirTemp
 
 ## Base de datos ##
 # Crear usuario, Base de Datos y establecer permisos
-echo "#### Creado Base de Datos"
+
 touch ~/$DirTemp/dbConfig.sql
 echo "
 create database ${postgresDataBase};
@@ -62,14 +62,13 @@ GRANT ALL ON ALL SEQUENCES IN SCHEMA public to  ${postgresUser};
 GRANT ALL ON ALL FUNCTIONS IN SCHEMA public to ${postgresUser};" > ~/$DirTemp/dbConfig.sql
 
 sudo -u postgres psql -f ~/$DirTemp/dbConfig.sql
-rm -r ~/$DirTemp
 echo "Crear Data Base:${postgresDataBase}, " >> ReporteInstalacion.txt
 
 echo "#### Clonando Proyeto"
 ## Clonar proyecto
 cd ~/
-git clone --branch develop https://gitlab.com/mpoletti-peduca/paraguayeduca-django.git 
-echo "Clonar gitlab " >> ReporteInstalacion.txt
+git clone --branch develop https://gitlab.com/mpoletti-peduca/paraguayeduca-django.git
+echo "Clonar gitlab Rama develop " >> ReporteInstalacion.txt
 
 mkdir env
 python3 -m venv ~/env
@@ -117,4 +116,93 @@ echo "Local_setting Generado" >> ReporteInstalacion.txt
 ## Poblar base de datos 
 python ~/paraguayeduca-django/manage.py migrate
 python ~/paraguayeduca-django/manage.py createsuperuser 
-python ~/paraguayeduca-django/manage.py runserver localhost:8000
+echo "Migrado y Creado SuperUser" >> ReporteInstalacion.txt
+
+echo "#### Instalado Guanicorn - Supervisor - Ngix"
+
+### Instalar Guanicorn 
+# Instalacion
+sudo apt install python-pip -y 
+#sudo apt-get install gunicorn -y 
+pip3 install gunicorn
+pip install psycopg2-binary
+echo "Gunicorn Instalado" >> ReporteInstalacion.txt
+
+# Ngicx
+sudo apt-get install nginx -y
+echo "Nginx instalado" >> ReporteInstalacion.txt
+
+
+# Prueba   sguanicorn 
+#cd ~/paraguayeduca-django
+#gunicorn --bind 0.0.0.0:8000 meta.wsgi:application ## similar to runserver
+
+# Install supervisor 
+sudo apt-get install -y supervisor ## This command holds the website after we logout
+echo "Supervisor instaldo" >> ReporteInstalacion.txt
+
+echo "#### Configurando Supervisor "
+
+# Config Supervisor
+#cd /etc/supervisor/conf.d/
+sudo touch /etc/supervisor/conf.d/gunicorn.conf
+sudo chmod 777 gunicorn.conf
+sudo echo "
+[program:gunicorn]
+directory=/home/ubuntu/paraguayeduca-django
+command=/home/ubuntu/env/bin/gunicorn --workers 3 --bind unix:/home/ubuntu/paraguayeduca-django/app.sock meta.wsgi:application
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/gunicorn/gunicorn.err.log
+stdout_logfile=/var/log/gunicorn/gunicorn.out.log
+
+[group:guni]
+programs:gunicorn" > /etc/supervisor/conf.d/gunicorn.conf
+echo "Supervisor Configurado" >> ReporteInstalacion.txt
+
+# Conectar fichero de supervisor 
+## Crear directorios 
+sudo mkdir -p /var/log/gunicorn
+sudo supervisorctl reread
+sudo supervisorctl update all
+echo "Supervisor Conectado" >> ReporteInstalacion.txt
+
+##  Compruebe si gunicorn se está ejecutando en segundo plano
+sudo supervisorctl status
+
+## Cree la configuración de nginx para el sitio de django
+#sudo touch /etc/nginx/sites-available/django.conf
+
+#sudo chmod 777 django.conf
+echo "#### Configurando ngix Django"
+
+sudo echo " 
+server {
+listen 80;
+#server_name portalmeta.org.py www.portalmeta.org.py;
+server_name ${publicIP};
+
+ location / {
+  include proxy_params;
+  proxy_pass http://unix:/home/ubuntu/paraguayeduca-django/app.sock;
+ }
+
+ location /static/ {
+  autoindex on;
+  alias /home/ubuntu/paraguayeduca-django/static/;
+ }
+
+ location /media/ {
+  autoindex on;
+  alias /home/ubuntu/paraguayeduca-django/media/;
+ }
+}" > /etc/nginx/sites-available/django.conf
+
+## Test fichero de configuracion 
+sudo ln /etc/nginx/sites-available/django.conf /etc/nginx/sites-enabled/
+sudo nginx -t
+
+## Restart NGINX server 
+sudo service nginx restart
+echo "Restart nginx" >> ReporteInstalacion.txt
+echo "#### Fin del Script  "
