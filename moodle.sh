@@ -24,7 +24,7 @@ git clone -b MOODLE_26_STABLE git://git.moodle.org/moodle.git
 sudo cp -r moodle/ /var/www/html/
 sudo chown -R root /var/www/html/moodle/
 sudo chmod -R 0755 /var/www/html/moodle/
-sudo find /var/www/html/moodle/ -type f -exec chmod 0644 {} \;
+sudo find /var/www/html/mocdodle/ -type f -exec chmod 0644 {} \;
 
 sudo mkdir /var/www/moodledata
 sudo chmod 0777 /var/www/moodledata/
