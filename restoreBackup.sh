@@ -39,7 +39,7 @@ sudo rm ~/dbConfig.sql
         echo "ANTES ---->> :${DataBases} ---> ${UserDataBase}  ${dirBackup} " 
         pg_restore -h localhost -d $DataBases -U $UserDataBase -v $dirBackup
   
-    els
+    else
         echo "Restaurando Moodle"
         tar -xzvf $dirBackupMoodle
         dirBackup=$(find $dir -name "*cmd.backup"  -and -name "*moodle*")
