@@ -7,29 +7,39 @@ dir=$PWD
 #####################postgres meta meta##
 
 function restor () {
-read -p "Ingrese nombre de la base de datos : " DataBase
-read -p "Ingrese User de la base de datos ${DataBase} : " UserDataBase
-echo "Datos ingresados : DataBase: ${Database} | User: ${UserDataBase}"
+read -p "Ingrese nombre de la base de datos : " DataBases
+read -p "Ingrese User de la base de datos ${DataBases} : " UserDataBase
+echo "Datos ingresados ->  DataBase: ${Databases} | User: ${UserDataBase}"
+read -p "Desea hacer drop de la base de datos  ${DataBases} [s]/[n] : " dropUser
+
+if [ $dropUser = 'S' ] || [ $dropUser = 's' ] || [ $dropUser = 'Y' ] || [ $dropUser = 'y' ]
+    then
+echo "
+DROP DATABASE ${DataBases};
+CREATE DATABASE ${DataBases};" > ~/dbConfig.sql
+else
+    auxDrop=" "
+fi
 touch ~/dbConfig.sql
 echo "
-GRANT ALL PRIVILEGES ON DATABASE ${DataBase} TO ${UserDataBase};
+GRANT ALL PRIVILEGES ON DATABASE ${DataBases} TO ${UserDataBase};
 GRANT ALL ON ALL TABLES IN SCHEMA public to ${UserDataBase};
 GRANT ALL ON ALL SEQUENCES IN SCHEMA public to  ${UserDataBase};
-GRANT ALL ON ALL FUNCTIONS IN SCHEMA public to ${UserDataBase};" > ~/$DirTemp/dbConfig.sql
+GRANT ALL ON ALL FUNCTIONS IN SCHEMA public to ${UserDataBase};" >> ~/dbConfig.sql
 sudo -u postgres psql -f ~/dbConfig.sql
-#sudo rm ~/dbConfig.sql
+sudo rm ~/dbConfig.sql
 
     if [ $1 = "cms" ]
     then
         echo "Restaurando CMS"
         tar -xzvf $dirBackupCms
         dirBackup=$(find $dir -name "*cmd.backup"  -and -name "*cmd*")
-        # echo "dirBAC -> : ${dirBackup}" 
+        echo "dirBAC -> : ${dirBackup}" 
         auxDir=$(dirname $dirBackup)
-        # echo "aux : ${auxDir}" 
-        pg_restore -h localhost -d $DataBase -U $UserDataBase -v $dirBackup
+        echo "ANTES ---->> :${DataBases} ---> ${UserDataBase}  ${dirBackup} " 
+        pg_restore -h localhost -d $DataBases -U $UserDataBase -v $dirBackup
   
-    else
+    els
         echo "Restaurando Moodle"
         tar -xzvf $dirBackupMoodle
         dirBackup=$(find $dir -name "*cmd.backup"  -and -name "*moodle*")
@@ -59,17 +69,14 @@ Restore Moodle = [m]
 Restore Cms    = [c]
 Restore Ambos  = [a]: " orde
 
-echo -n "Restaurando CMS"
-#restor "cms"
-
 case $orde in
     m|M)
-        echo -n "Restaurando Moodle"
+        echo -n "Restaurando Moodle-> "
         restor "moodle"
         ;;
 
     c|C)
-        echo -n "Restaurando CMS"
+        echo -n "Restaurando CMS -> "
         restor "cms"
         ;;
 
