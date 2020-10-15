@@ -30,13 +30,12 @@ o
 ```
 4. Posterior a la instalación
 * restore base de datos
-Descargar del lugar indicado
+Descargar el/los archivos tar.gz en el mismo lugar del script del restore
 ```bash
-pg_restore -h localhost -d $DataBase -U $UserDataBase -v $dirBackup
+./restoreBackup.sh
 ```
 *e.g.*
  
-pg_restore -h localhost -d meta -U postgres -v /directorioDondeestasuBackup/meta.backup
  
 * Configuracion Local
 En la versión actual de develop hay que hacer las siguientes configuraciones si actualizan su local:
