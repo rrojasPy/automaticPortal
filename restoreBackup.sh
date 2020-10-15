@@ -54,7 +54,6 @@ else
     echo "cmc : ${dirBackupCms} "
 fi
 
-
 read -p "Seleccione ->
 Restore Moodle = [m] 
 Restore Cms    = [c]
