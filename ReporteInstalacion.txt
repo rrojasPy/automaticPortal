@@ -1,8 +1,0 @@
-python 3 Instalado
-python-pip Instalado
-postgress 3 Instalado
-Crear Data Base:meta, 
-python 3 Instalado
-python-pip Instalado
-postgress 3 Instalado
-Crear Data Base:meta, 

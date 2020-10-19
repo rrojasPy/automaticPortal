@@ -39,6 +39,26 @@ sudo rm ~/dbConfig.sql
         echo "ANTES ---->> :${DataBases} ---> ${UserDataBase}  ${dirBackup} " 
         pg_restore -h localhost -d $DataBases -U $UserDataBase -v $dirBackup
   
+        read -p "Desea restabler carpeta Media? [s]/[n] : " opMedia
+
+        if [ $opMedia = "S" ] || [ $opMedia = "s" ]
+            then
+            dirMedia=$(find $dir -name "*media")
+            cp -r $dirMedia ~/paraguayeduca-django
+            #chmod -777 ~/paraguayeduca-django/media
+            echo "Se ha restaurado la carpeta media "
+    
+        fi
+        read -p "Desea eliminar los archivos de restauracion? [s]/[n] : " opBorrar
+
+        if [ $opBorrar= "S" ] || [ $opBorrar = "s" ]
+            then
+            sudo rm -r $dirBackupCms
+            dirHome=$(find $dir -name "*home" )
+            sudo rm -r $dirHome
+            echo "Se ha elimindo  -> ${ficheros[*]} "
+        fi
+
     else
         echo "Restaurando Moodle"
         tar -xzvf $dirBackupMoodle
@@ -46,6 +66,8 @@ sudo rm ~/dbConfig.sql
         auxDir=$(dirname $dirBackup)
         pg_restore -h localhost -d $DataBase -U $UserDataBase -v $dirBackup
     fi 
+
+    echo "Se ha finalizado la restauracion del restore -> ${ficheros[*]} "
 }
 
 ## Detectar archivos de restauracion 
