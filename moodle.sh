@@ -10,6 +10,9 @@ sudo su - postgres
 ##
 # psql
 # \password postgres
+   postgres=# CREATE USER moodleuser WITH PASSWORD 'meta';
+   postgres=# CREATE DATABASE moodle WITH OWNER moodleuser;
+
 #
 
 # Instalar pgadmin
@@ -31,7 +34,7 @@ sudo apt install pgadmin4 pgadmin4-apache2 -y
 # Instalacion moodle
 
 git clone git://git.moodle.org/moodle.git
-git clone -b MOODLE_26_STABLE git://git.moodle.org/moodle.git
+git clone -b MOODLE_39_STABLE git://git.moodle.org/moodle.git
 sudo cp -r moodle/ /var/www/html/
 sudo chown -R root /var/www/html/moodle/
 sudo chmod -R 0755 /var/www/html/moodle/
@@ -42,14 +45,14 @@ sudo chmod 0777 /var/www/moodledata/
 sudo chown www-data /var/www/html/moodle/
 
 #Se instalan paquetes necesarios de php:
-sudo apt-get install php-curl -y
-sudo apt-get install php-xml -y
-sudo apt-get install php-zip -y
-sudo apt-get install php-mbstring -y
-sudo apt-get install php-gd -y
-sudo apt-get install php-intl -y
-sudo apt-get install php-xmlrpc -y
-sudo apt-get install php-soap -y
+sudo apt-get install php7.4-curl -y
+sudo apt-get install php7.4-xml -y
+sudo apt-get install php7.4-zip -y
+sudo apt-get install php7.4-mbstring -y
+sudo apt-get install php7.4-gd -y
+sudo apt-get install php7.4-intl -y
+sudo apt-get install php7.4-xmlrpc -y
+sudo apt-get install php7.4-soap
 sudo systemctl restart apache2 -y
 
 cd /var/www/html/moodle/admin/cli/
