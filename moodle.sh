@@ -2,8 +2,10 @@
 
 
 sudo apt update
-sudo apt install apache2
-sudo apt install php php-pgsql libapache2-mod-php -y
+sudo apt install software-properties-common apt-transport-https -y
+sudo apt update
+sudo apt-get install libapache2-mod-php7.4 -y
+
 sudo apt install postgresql postgresql-contrib -y
 sudo su - postgres
 
@@ -12,6 +14,8 @@ sudo su - postgres
 # \password postgres
    postgres=# CREATE USER moodleuser WITH PASSWORD 'meta';
    postgres=# CREATE DATABASE moodle WITH OWNER moodleuser;
+   GRANT ALL PRIVILEGES ON DATABASE moodle TO moodleuser;
+
 
 #
 
@@ -52,11 +56,12 @@ sudo apt-get install php7.4-mbstring -y
 sudo apt-get install php7.4-gd -y
 sudo apt-get install php7.4-intl -y
 sudo apt-get install php7.4-xmlrpc -y
-sudo apt-get install php7.4-soap
-sudo systemctl restart apache2 -y
+sudo apt-get install php7.4-soap -y
+sudo apt-get install php7.4-pgsql -y
+sudo systemctl restart apache2 
 
 cd /var/www/html/moodle/admin/cli/
 sudo -u www-data /usr/bin/php install.php
 
-
+## Configurar dr9venhttps://github.com/astrada/google-drive-ocamlfuse/wiki/Headless-Usage-&-Authorization
 
