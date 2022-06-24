@@ -64,4 +64,4 @@ cd /var/www/html/moodle/admin/cli/
 sudo -u www-data /usr/bin/php install.php
 
 ## Configurar dr9venhttps://github.com/astrada/google-drive-ocamlfuse/wiki/Headless-Usage-&-Authorization
-
+# https://ubunlog.com/montar-google-drive-localmente/#Uso
