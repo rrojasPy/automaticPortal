@@ -4,7 +4,8 @@ El repositorio está conformado por 3 archivos principales
 * **moodle.sh :** Script para instalar moodle.
 * **wagtail.sh :** Script para instalar  cms en una maquina local.
 * **wagtail_server.sh :** Script para instalar  cms en un servidor.
- 
+* **autoSend.py :** Script para Enviar mensajes  whatsapp.
+
 ## Instalación
  
 1. Permisos
